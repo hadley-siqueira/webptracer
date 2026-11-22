@@ -18,18 +18,21 @@ se a sessão for interrompida.
 - [x] testes (vitest)
 
 ## Servidor (`apps/server`)
-- [ ] Express + Socket.IO, salas por laboratório, servidor autoritativo
-- [ ] SQLite com Drizzle (labs, versões)
-- [ ] modos tempo real / simulação, passo, avançar tempo
-- [ ] colaboração: presença, cursores, chat
-- [ ] versões (commit/restaurar), objetivos, chaos, pcap
+- [x] Express + Socket.IO, salas por laboratório, servidor autoritativo
+- [x] SQLite com Drizzle (labs, versões)
+- [x] modos tempo real / simulação, passo, avançar tempo
+- [x] colaboração: presença, cursores, chat
+- [x] versões (commit/restaurar), objetivos, chaos, pcap
 
 ## Web (`apps/web`)
-- [ ] Vite + React; topologia lógica (arrastar, cabos, LEDs)
-- [ ] terminal xterm.js por dispositivo
-- [ ] animação de pacotes, lista de eventos, detalhe por camada + hex
-- [ ] visão física (rack SVG)
-- [ ] painéis: chat/presença, versões, objetivos, chaos
+- [x] Vite + React; topologia lógica (arrastar, cabos, LEDs)
+- [x] terminal xterm.js por dispositivo
+- [x] animação de pacotes, lista de eventos, detalhe por camada + hex
+- [x] visão física (rack SVG)
+- [x] painéis: chat/presença, versões, objetivos, chaos
 
 ## Exemplo
 - [x] laboratório de exemplo (VLANs + router-on-a-stick + NAT + DHCP + IPv6)
+
+## Validação
+- [ ] teste manual da interface no navegador
