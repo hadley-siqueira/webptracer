@@ -607,8 +607,35 @@ export function iosGrammar(): Grammar<S> {
 
   // ------------------------------------------------------------------- SHOW
   const SHOW_MODES = ['user', 'priv'];
+  const SHOW_HELP: Record<string, string> = {
+    'access-lists': 'List access lists',
+    arp: 'ARP table',
+    brief: 'Brief summary of IP status and configuration',
+    cdp: 'CDP information',
+    clock: 'Display the system clock',
+    dhcp: 'Show items in the DHCP database',
+    binding: 'DHCP address bindings',
+    pool: 'DHCP pools information',
+    history: 'Display the session command history',
+    interface: 'IP interface status and configuration',
+    interfaces: 'Interface status and configuration',
+    ip: 'IP information',
+    ipv6: 'IPv6 information',
+    mac: 'MAC configuration',
+    'address-table': 'MAC forwarding table',
+    nat: 'IP NAT information',
+    neighbors: 'CDP neighbor entries',
+    protocols: 'Active network routing protocols',
+    route: 'IP routing table',
+    'running-config': 'Current operating configuration',
+    'spanning-tree': 'Spanning tree topology',
+    'startup-config': 'Contents of startup configuration',
+    translations: 'Translation entries',
+    version: 'System hardware and software status',
+    vlan: 'VTP VLAN status',
+  };
   const sh = (syntax: string, fn: (s: S, a: Args) => string, helps?: Record<string, string>, modes: string[] = SHOW_MODES) =>
-    g.add(modes, `show ${syntax}`, (s, a) => s.out(fn(s, a)), helps);
+    g.add(modes, `show ${syntax}`, (s, a) => s.out(fn(s, a)), { ...SHOW_HELP, ...helps });
 
   sh('running-config', (s) => {
     const c = buildRunningConfig(s.dev);
