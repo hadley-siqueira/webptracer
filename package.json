@@ -1,0 +1,19 @@
+{
+  "name": "webptracer",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "dev": "concurrently -k -n server,web -c blue,green \"npm run dev -w @webptracer/server\" \"npm run dev -w @webptracer/web\"",
+    "build": "npm run build -w @webptracer/web",
+    "start": "npm run start -w @webptracer/server",
+    "test": "vitest run",
+    "typecheck": "tsc -p packages/core --noEmit && tsc -p apps/server --noEmit && tsc -p apps/web --noEmit"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  }
+}
