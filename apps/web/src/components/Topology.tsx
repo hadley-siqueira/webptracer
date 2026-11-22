@@ -213,7 +213,7 @@ export function Topology(p: Props) {
               {sel && <rect x="-36" y="-32" width="72" height="64" rx="8" fill="#dbeafe" stroke="#3b82f6" />}
               <DeviceIcon kind={d.kind} powered={d.powered} />
               <text y="40" textAnchor="middle" className="dev-name">{d.name}</text>
-              {d.summary && <text y="53" textAnchor="middle" className="dev-sub">{d.summary.length > 34 ? d.summary.slice(0, 33) + '…' : d.summary}</text>}
+              {d.summary && d.host && <text y="53" textAnchor="middle" className="dev-sub">{d.summary.length > 34 ? d.summary.slice(0, 33) + '…' : d.summary}</text>}
               {!d.powered && <text y="-30" textAnchor="middle" className="dev-off">desligado</text>}
             </g>
           );

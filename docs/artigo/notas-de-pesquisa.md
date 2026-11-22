@@ -286,3 +286,31 @@ versões; objetivos com verificação por comportamento; injeção de falhas.
 
 - **2026-11-21** — Pergunta inicial; consulta ao Google AI Mode; levantamento comparativo de
   ferramentas; definição dos requisitos (seção 5) e das decisões (seção 6); início do MVP.
+- **2026-11-22** — Retomada após interrupção (queda de energia) da sessão anterior; reconstrução
+  do contexto a partir do histórico. Implementação do MVP: motor, equipamentos, CLIs, servidor
+  e interface Web. Validação com testes automatizados (vitest) e teste da interface em navegador.
+
+## 11. Achados de realismo durante a validação (2026-11-22)
+
+Comportamentos que surgiram naturalmente da simulação fiel dos protocolos e que exigiram
+ajustes para reproduzir o comportamento real dos sistemas — material útil para a discussão do
+artigo (fidelidade do simulador):
+
+1. **STP × DHCP**: a porta *trunk* do switch fica 30 s em *listening/learning* (802.1D). Um
+   cliente DHCP com poucas tentativas cai em APIPA antes de o enlace encaminhar. Solução fiel:
+   *backoff* exponencial do cliente (4, 8, 16, 32 s; cerca de 60 s no total), como no Windows.
+2. **STP × SLAAC**: as mensagens *Router Solicitation* (até 3, nos primeiros segundos) se perdem
+   pelo mesmo motivo; o host só obtém o prefixo no próximo RA periódico (200 s no IOS).
+   Implementado o comando real `ipv6 nd ra interval`, usado no laboratório de exemplo.
+3. **Concorrência no servidor DHCP**: dois clientes simultâneos recebiam a mesma oferta.
+   O IOS reserva o endereço oferecido; o simulador passou a fazer o mesmo.
+4. **Primeiro ping do IOS (`.!!!!`)**: reproduzido porque o roteador descarta o pacote que
+   dispara a resolução ARP, enquanto hosts o enfileiram.
+5. **Cabos**: sem auto-MDIX, roteador↔roteador e roteador↔PC exigem cabo cruzado (convenção
+   didática do CPT); portas com auto-MDIX aceitam qualquer cabo.
+
+### Estado da implementação (versão 0.1)
+- Testes automatizados: 10 cenários (CLI, ARP, STP em triângulo, BPDU Guard, ACL, isolamento
+  por VLAN, ida e volta da running-config, formato pcap e laboratório de exemplo completo).
+- O desempenho do motor permite avançar 90 s de tempo virtual de uma topologia de 7 nós em
+  ~50 ms (medida informal; formalizar na avaliação).

@@ -44,7 +44,8 @@ export function LabView({ labId, name, role, onExit }: { labId: string; name: st
   };
   const select = (sel: { type: 'device' | 'link'; id: string } | null) => {
     setSelected(sel);
-    if (sel) setTab('device');
+    // In simulation mode the event list stays visible while the student clicks around.
+    if (sel && tab !== 'events') setTab('device');
   };
 
   useEffect(() => {

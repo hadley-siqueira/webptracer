@@ -35,4 +35,4 @@ se a sessão for interrompida.
 - [x] laboratório de exemplo (VLANs + router-on-a-stick + NAT + DHCP + IPv6)
 
 ## Validação
-- [ ] teste manual da interface no navegador
+- [x] teste da interface no navegador (Chromium headless): topologia, console IOS com ?, modo simulação, inspeção de PDU, rack, objetivos (6/6)

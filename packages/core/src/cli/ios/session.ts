@@ -209,12 +209,12 @@ export class IosSession implements CliSession {
         this.questionCb = undefined;
         this.state = 'ready';
         cb(text);
-        if (this.state === 'ready') this.showPrompt();
+        this.promptUnlessBusy();
         return;
       }
       case 'banner':
         this.bannerLine(text);
-        if ((this.state as State) === 'ready') this.showPrompt();
+        this.promptUnlessBusy();
         return;
       case 'ready':
         if (text.trim()) {
@@ -222,8 +222,13 @@ export class IosSession implements CliSession {
           if (this.history.length > 20) this.history.shift();
         }
         this.execute(text);
-        if (this.state === 'ready') this.showPrompt();
+        this.promptUnlessBusy();
     }
+  }
+
+  /** After a command: show the prompt of the new state (ready, password, question...). */
+  private promptUnlessBusy() {
+    if ((this.state as State) !== 'busy' && (this.state as State) !== 'off') this.showPrompt();
   }
 
   private checkEnable(pw: string): boolean {

@@ -70,6 +70,7 @@ export class Room {
   private topologyDirty = true;
   private timer: NodeJS.Timeout;
   private lastPlayStep = 0;
+  private ticks = 0;
   private saveTimer?: NodeJS.Timeout;
   private chat: ChatMessage[] = [];
   private chatSeq = 1;
@@ -147,6 +148,7 @@ export class Room {
 
   private flush() {
     const io = this.io.to(this.channel);
+    if (++this.ticks % 5 === 0) io.emit('clock', { now: this.lab.sim.now, mode: this.mode, playing: this.playing });
     if (this.pendingTraces.length) {
       // In real-time mode only a sample of the traffic is animated.
       const list = this.mode === 'realtime' && this.pendingTraces.length > 120 ? this.pendingTraces.slice(-120) : this.pendingTraces;

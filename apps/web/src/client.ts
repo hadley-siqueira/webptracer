@@ -94,6 +94,10 @@ export class LabClient {
       const byId = new Map(a.devices.map((d) => [d.id, d]));
       this.set({ snapshot: { ...snap, now: a.now, links: a.links, devices: snap.devices.map((d) => byId.get(d.id) ?? d) } });
     });
+    s.on('clock', (c: { now: number }) => {
+      const snap = this.state.snapshot;
+      if (snap && snap.now !== c.now) this.set({ snapshot: { ...snap, now: c.now } });
+    });
     s.on('me', (u: UserView) => this.set({ me: u }));
     s.on('presence', (users: UserView[]) => {
       const cursors: State['cursors'] = {};
