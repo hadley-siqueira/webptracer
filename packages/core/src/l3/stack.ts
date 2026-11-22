@@ -57,6 +57,8 @@ export interface Addr6 {
   addr: IPv6;
   prefix: number;
   source: 'manual' | 'eui64' | 'slaac' | 'linklocal';
+  /** Link-local configured by hand ("ipv6 address FE80::1 link-local"). */
+  manual?: boolean;
 }
 
 export interface DhcpLease {
@@ -100,6 +102,10 @@ export interface L3If {
   /** Host-side: request IPv6 autoconfiguration from RAs. */
   slaac?: boolean;
   raSuppress?: boolean;
+  /** Maximum interval between unsolicited Router Advertisements, in seconds (IOS default 200). */
+  raInterval?: number;
+  /** Virtual time of the next unsolicited RA. */
+  nextRa?: number;
   loopback?: boolean;
   /** Duplicate address detected (Windows shows "(Duplicado)"). */
   duplicate?: IPv4;
@@ -157,6 +163,8 @@ export interface DhcpBinding {
   mac: Mac;
   pool: string;
   expires: number;
+  /** Address reserved by an OFFER, not yet confirmed by REQUEST/ACK. */
+  offered?: boolean;
 }
 
 export interface ArpEntry {
@@ -225,7 +233,7 @@ export class IpStack {
   dnsServers: IPv4[] = [];
   /** Windows APIPA fallback when DHCP fails. */
   apipa = false;
-  dhcpRetries = 4;
+  dhcpRetries = 5;
 
   // ------------------------------------------------------------ dynamic state
   arp = new Map<string, ArpEntry>();
@@ -1017,6 +1025,9 @@ export class IpStack {
         return;
       }
       this.dev.note(`Servidor DHCP (pool ${pool.name}): oferecendo ${formatIPv4(ip)} para ${d.chaddr}`, 'info', traceId);
+      // Reserve the offered address so that simultaneous clients get different ones.
+      const cur = this.dhcpBindings.get(d.chaddr);
+      if (!cur || cur.offered || cur.ip !== ip) this.dhcpBindings.set(d.chaddr, { ip, mac: d.chaddr, pool: pool.name, expires: this.now + 60_000, offered: true });
       reply(DHCP.OFFER, ip);
     } else if (d.msgType === DHCP.REQUEST) {
       if (d.options.serverId !== undefined && !this.ownsV4(d.options.serverId)) {
@@ -1126,7 +1137,9 @@ export class IpStack {
     if (st.timer) st.timer.cancelled = true;
     const tok = { cancelled: false };
     st.timer = tok;
-    this.dev.timer(4000, () => {
+    // Exponential backoff (4, 8, 16, 32 s), as real clients do: about one minute in total.
+    const delay = 4000 * 2 ** Math.max(0, Math.min(st.tries - 1, 3));
+    this.dev.timer(delay, () => {
       if (tok.cancelled || iface.dhcp !== st) return;
       if (st.state === 'bound') return;
       if (st.tries >= this.dhcpRetries) {
