@@ -251,6 +251,7 @@ export class WindowsShell extends HostShell {
         this.println('Approximate round trip times in milli-seconds:');
         this.println(`    Minimum = ${min}ms, Maximum = ${max}ms, Average = ${avg}ms`);
       }
+      this.println('');
       this.done();
     };
     this.async(() => {
