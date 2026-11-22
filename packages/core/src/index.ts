@@ -16,3 +16,5 @@ export { Lab, emptyDoc, autoCable, type LabDoc, type LabDevice, type LabLink, ty
 export { gradeLab, type CheckResult } from './lab/checks';
 export { injectFault, type Fault } from './lab/chaos';
 export { sampleLab } from './lab/sample';
+export * from './protocol';
+export { WARMUP_MS } from './lab/checks';
