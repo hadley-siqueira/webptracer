@@ -15,7 +15,7 @@ se a sessão for interrompida.
 - [x] cli: framework (abreviação, ?, Tab, no, do, erros IOS) + comandos IOS + shells Windows/Linux
 - [x] running-config: geração e carga (replay)
 - [x] lab: documento do laboratório, construção da simulação, verificação por comportamento, chaos
-- [ ] testes (vitest)
+- [x] testes (vitest)
 
 ## Servidor (`apps/server`)
 - [ ] Express + Socket.IO, salas por laboratório, servidor autoritativo
